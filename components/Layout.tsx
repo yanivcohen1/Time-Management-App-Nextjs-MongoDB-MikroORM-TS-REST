@@ -46,6 +46,19 @@ export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const listItemSx = {
+    '&.Mui-selected': {
+      backgroundColor: theme.palette.mode === 'light' ? '#e3f2fd' : 'rgba(144, 202, 249, 0.16)',
+      color: theme.palette.mode === 'light' ? '#1976d2' : '#90caf9',
+      '& .MuiListItemIcon-root': {
+        color: theme.palette.mode === 'light' ? '#1976d2' : '#90caf9',
+      },
+      '&:hover': {
+        backgroundColor: theme.palette.mode === 'light' ? '#bbdefb' : 'rgba(144, 202, 249, 0.24)',
+      },
+    },
+  };
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -66,7 +79,11 @@ export default function Layout({ children }: LayoutProps) {
       <List>
         <ListSubheader>Main status board</ListSubheader>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleNavigation('/workload')}>
+          <ListItemButton 
+            onClick={() => handleNavigation('/workload')}
+            selected={router.pathname === '/workload'}
+            sx={listItemSx}
+          >
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
@@ -78,7 +95,11 @@ export default function Layout({ children }: LayoutProps) {
       <List>
         <ListSubheader>Todo menu</ListSubheader>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleNavigation('/todos')}>
+          <ListItemButton 
+            onClick={() => handleNavigation('/todos')}
+            selected={router.pathname === '/todos' && !router.query.deleted}
+            sx={listItemSx}
+          >
             <ListItemIcon>
               <ListIcon />
             </ListItemIcon>
@@ -94,7 +115,11 @@ export default function Layout({ children }: LayoutProps) {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleNavigation('/todos?deleted=true')}>
+          <ListItemButton 
+            onClick={() => handleNavigation('/todos?deleted=true')}
+            selected={router.pathname === '/todos' && router.query.deleted === 'true'}
+            sx={listItemSx}
+          >
              {/* Placeholder for Delete/Recycle Bin */}
             <ListItemIcon>
               <DeleteIcon />
@@ -107,7 +132,11 @@ export default function Layout({ children }: LayoutProps) {
       <List>
         <ListSubheader>Agile menu</ListSubheader>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => handleNavigation('/')}>
+          <ListItemButton 
+            onClick={() => handleNavigation('/')}
+            selected={router.pathname === '/'}
+            sx={listItemSx}
+          >
             <ListItemIcon>
               <ViewKanbanIcon />
             </ListItemIcon>
