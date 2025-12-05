@@ -43,7 +43,8 @@ export default function Todos() {
 
   const [filterTitle, setFilterTitle] = useState('');
   const [filterStatus, setFilterStatus] = useState('ALL');
-  const [filterDate, setFilterDate] = useState('');
+  const [filterStartDate, setFilterStartDate] = useState('');
+  const [filterEndDate, setFilterEndDate] = useState('');
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -60,7 +61,18 @@ export default function Todos() {
   const filteredTodos = todos.filter((todo) => {
     const matchesTitle = todo.title.toLowerCase().includes(filterTitle.toLowerCase());
     const matchesStatus = filterStatus && filterStatus !== 'ALL' ? todo.status === filterStatus : true;
-    const matchesDate = filterDate ? (todo.dueTime && new Date(todo.dueTime).toISOString().startsWith(filterDate)) : true;
+    
+    let matchesDate = true;
+    if (filterStartDate || filterEndDate) {
+      if (!todo.dueTime) {
+        matchesDate = false;
+      } else {
+        const todoDate = new Date(todo.dueTime).toISOString().split('T')[0];
+        if (filterStartDate && todoDate < filterStartDate) matchesDate = false;
+        if (filterEndDate && todoDate > filterEndDate) matchesDate = false;
+      }
+    }
+
     return matchesTitle && matchesStatus && matchesDate;
   });
 
@@ -137,10 +149,20 @@ export default function Todos() {
             <MenuItem value="COMPLETED">Completed</MenuItem>
           </TextField>
           <TextField
-            label="Filter by Date"
+            label="Start Date"
             type="date"
-            value={filterDate}
-            onChange={(e) => { setFilterDate(e.target.value); setPage(0); }}
+            value={filterStartDate}
+            onChange={(e) => { setFilterStartDate(e.target.value); setPage(0); }}
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="End Date"
+            type="date"
+            value={filterEndDate}
+            onChange={(e) => { setFilterEndDate(e.target.value); setPage(0); }}
             size="small"
             InputLabelProps={{
               shrink: true,
