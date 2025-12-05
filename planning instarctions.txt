@@ -1,0 +1,47 @@
+create todo app in nextjs and ts that include 'due time' and status: ["BACKLOG", "PENDING", "IN_PROGRESS", "COMPLETED"] also side menu with main menu "Main status board" that include 'Dates by workload' todo menu "Track status" create delete and agile menu with 4 coloms for each status with drag and drop
+also add login logout and role user and admin
+the db will be mongodb with MikroORM also used Material UI for gui and Cypress for e2e
+the app will be responsive with dark/light and in mobile the sidebar will be on z-index the scurity will be jwt tat inject by Axios response also the Axios will show react-top-loading-bar in reqests and also will be show errors on snackbar
+and also will inject in respones the autorizetion haeder for jwt
+and also create .env.development and .env.production for DATABASE_URL, JWT_ACCESS_SECRET, JWT_ACCESS_TTL_SECONDS, SEED_DEMO_PASSWORD=ChangeMe123!
+SEED_ADMIN_EMAIL=admin@todo.dev
+SEED_ADMIN_NAME=Demo Admin
+SEED_USER_EMAIL=user@todo.dev
+SEED_USER_NAME=Demo User
+
+and also add seed data user and todo for the demo and also add in login two buttons for demo user login and admin user login
+
+used main domain color that all pages will be share buttons menus loading-bar
+
+mongodb name will be next-todo-app
+
+used pnpm to all node operations
+
+add units tests and e2e tests
+-----------------------------------------
+
+Drag & Drop Library: I will use @hello-pangea/dnd (maintained fork of react-beautiful-dnd) for better React 18 support.
+
+State Management: Will use React Context for Auth and local state for Todos/Kanban to keep it simple.
+
+Styling: Will use MUI's
+
+-----------------------------------------
+
+SSR & Dnd: Will wrap the Kanban board in a client-only component to prevent hydration errors.
+MikroORM: Will ensure RequestContext is forked per API request to prevent data leaks.
+Styling: Will use MUI's ThemeProvider for the dark/light mode and consistent domain colors.
+
+-----------------------------------------
+
+Menu Interpretation: "Create" and "Delete" in the menu will be implemented as a "Create New" modal trigger and a "Recycle Bin" or "Bulk Delete" view respectively, to keep the UI logical.
+JWT Handling: Axios will automatically attach the Authorization header to requests and handle token storage upon successful login response.
+
+------------------------------------------
+1.
+Menu Structure: The sidebar will be strictly organized into "Main status board", "Todo menu", and "Agile menu" groups as requested.
+2
+. JWT Handling: Axios will automatically attach the Authorization header to requests and handle token storage upon successful login response.
+3. Z-Index: Mobile sidebar will use a high z-index to overlay content as requested.
+
+---------------------------------------
