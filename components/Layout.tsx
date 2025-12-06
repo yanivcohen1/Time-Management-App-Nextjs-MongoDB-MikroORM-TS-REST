@@ -23,7 +23,6 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ListIcon from '@mui/icons-material/List';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 import LogoutIcon from '@mui/icons-material/Logout';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
@@ -116,19 +115,6 @@ export default function Layout({ children }: LayoutProps) {
               <AddIcon />
             </ListItemIcon>
             <ListItemText primary="Create" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton 
-            onClick={() => handleNavigation('/todos?deleted=true')}
-            selected={router.pathname === '/todos' && router.query.deleted === 'true'}
-            sx={listItemSx}
-          >
-             {/* Placeholder for Delete/Recycle Bin */}
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Delete" />
           </ListItemButton>
         </ListItem>
       </List>
