@@ -21,6 +21,7 @@ import {
   TablePagination,
   Popover,
   Button,
+  TableSortLabel,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -51,6 +52,15 @@ export default function Todos() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = useState<keyof Todo>('title');
+
+  const handleRequestSort = (property: keyof Todo) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -77,6 +87,21 @@ export default function Todos() {
 
     return matchesTitle && matchesStatus && matchesDate;
   });
+
+  const sortedTodos = React.useMemo(() => {
+    return [...filteredTodos].sort((a, b) => {
+      const aValue = a[orderBy] || '';
+      const bValue = b[orderBy] || '';
+
+      if (bValue < aValue) {
+        return order === 'desc' ? -1 : 1;
+      }
+      if (bValue > aValue) {
+        return order === 'desc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [filteredTodos, order, orderBy]);
 
   const fetchTodos = async () => {
     try {
@@ -191,15 +216,47 @@ export default function Todos() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Due Date</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'title'}
+                  direction={orderBy === 'title' ? order : 'asc'}
+                  onClick={() => handleRequestSort('title')}
+                >
+                  Title
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'description'}
+                  direction={orderBy === 'description' ? order : 'asc'}
+                  onClick={() => handleRequestSort('description')}
+                >
+                  Description
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'status'}
+                  direction={orderBy === 'status' ? order : 'asc'}
+                  onClick={() => handleRequestSort('status')}
+                >
+                  Status
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'dueTime'}
+                  direction={orderBy === 'dueTime' ? order : 'asc'}
+                  onClick={() => handleRequestSort('dueTime')}
+                >
+                  Due Date
+                </TableSortLabel>
+              </TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredTodos
+            {sortedTodos
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((todo) => (
               <TableRow
