@@ -133,11 +133,11 @@ pnpm lint
 
 ## Track Status
 
-<img width="2483" height="1692" alt="image" src="https://github.com/user-attachments/assets/f35cc594-6af8-49ca-843d-0eda55c87085" />
+<img width="2345" height="1680" alt="image" src="https://github.com/user-attachments/assets/612e648f-b663-47be-83f3-2490d7ffb655" />
 
 ## Board page
 
-<img width="2488" height="1270" alt="image" src="https://github.com/user-attachments/assets/7de130b3-c619-4aa7-8415-75a6d18cfb3c" />
+<img width="2369" height="1317" alt="image" src="https://github.com/user-attachments/assets/e95af13c-6489-4bc0-b9c4-b03246c62475" />
 
 ## Ligth mode
 
