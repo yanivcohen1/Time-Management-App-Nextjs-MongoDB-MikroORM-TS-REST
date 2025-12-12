@@ -126,3 +126,23 @@ pnpm lint
 | `pnpm test` | Runs unit and integration tests using Jest. |
 | `pnpm test:e2e` | Runs end-to-end tests using Cypress (headless mode). |
 | `pnpm seed` | Seeds the database with initial data. |
+
+## Main Page
+
+<img width="1692" height="1496" alt="image" src="https://github.com/user-attachments/assets/54f149ee-3565-4e59-bc7a-5145bd1d9bf9" />
+
+## Track Status
+
+<img width="2262" height="1440" alt="image" src="https://github.com/user-attachments/assets/edb01bb2-1155-4b27-9ff3-44f66a0bd4a6" />
+
+## Board page
+
+<img width="2089" height="1387" alt="image" src="https://github.com/user-attachments/assets/547d7f14-a20c-4ea7-abe0-4866011828ef" />
+
+## Ligth mode
+
+<img width="2275" height="1438" alt="image" src="https://github.com/user-attachments/assets/62f68e96-2479-4454-8793-2ceaaca71be9" />
+
+## Mobile mode
+
+<img width="1118" height="1351" alt="image" src="https://github.com/user-attachments/assets/2ade3bf7-80fa-46b7-8980-40e415415040" />
