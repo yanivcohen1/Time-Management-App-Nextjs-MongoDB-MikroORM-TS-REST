@@ -11,11 +11,11 @@ export const json = <T>(data: T, init?: ResponseInit) => NextResponse.json(data,
 
 export const handleError = (error: unknown) => {
   if (error instanceof ApiError) {
-    return NextResponse.json({ error: error.message }, { status: error.status });
+    return NextResponse.json({ message: error.message }, { status: error.status });
   }
 
   console.error(error);
-  return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
 };
 
 export const assert = (condition: unknown, status: number, message: string) => {
