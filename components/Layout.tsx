@@ -59,14 +59,17 @@ export default function Layout({ children }: LayoutProps) {
   }, [user]);
 
   const listItemSx = {
+    '&:hover': {
+      backgroundColor: theme.palette.mode === 'light' ? '#1976d2' : undefined,
+    },
     '&.Mui-selected': {
-      backgroundColor: theme.palette.mode === 'light' ? '#e3f2fd' : 'rgba(144, 202, 249, 0.16)',
-      color: theme.palette.mode === 'light' ? '#1976d2' : '#90caf9',
+      backgroundColor: theme.palette.mode === 'light' ? '#1976d2' : 'rgba(144, 202, 249, 0.16)',
+      color: theme.palette.mode === 'light' ? 'white' : '#90caf9',
       '& .MuiListItemIcon-root': {
-        color: theme.palette.mode === 'light' ? '#1976d2' : '#90caf9',
+        color: theme.palette.mode === 'light' ? 'white' : '#90caf9',
       },
       '&:hover': {
-        backgroundColor: theme.palette.mode === 'light' ? '#bbdefb' : 'rgba(144, 202, 249, 0.24)',
+        backgroundColor: theme.palette.mode === 'light' ? '#1976d2' : 'rgba(144, 202, 249, 0.24)',
       },
     },
   };
@@ -181,6 +184,20 @@ export default function Layout({ children }: LayoutProps) {
                 value={selectedUserId || ''}
                 label="User"
                 onChange={(e) => setSelectedUserId(e.target.value || null)}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      '& .MuiMenuItem-root:hover': {
+                        backgroundColor: mode === 'light' ? '#1976d2' : undefined                      },
+                      '& .MuiMenuItem-root.Mui-selected': {
+                        backgroundColor: mode === 'light' ? '#1976d2' : undefined,
+                        color: mode === 'light' ? 'white' : undefined,
+                        '&:hover': {
+                          backgroundColor: mode === 'light' ? '#0d47a1' : undefined,
+                        }                      }
+                    }
+                  }
+                }}
               >
                 <MenuItem value="">
                   <em>All Users</em>

@@ -22,6 +22,7 @@ import {
   Popover,
   Button,
   TableSortLabel,
+  useTheme,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -40,6 +41,7 @@ interface Todo {
 export default function Todos() {
   const { user, loading, selectedUserId } = useAuth();
   const router = useRouter();
+  const theme = useTheme();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [total, setTotal] = useState(0);
   const [editTodo, setEditTodo] = useState<Todo | undefined>(undefined);
@@ -175,6 +177,22 @@ export default function Todos() {
             onChange={(e) => { setFilterStatus(e.target.value); setPage(0); }}
             size="small"
             sx={{ minWidth: 150 }}
+            SelectProps={{
+              MenuProps: {
+                PaperProps: {
+                  sx: {
+                    '& .MuiMenuItem-root:hover': {
+                      backgroundColor: theme.palette.mode === 'light' ? '#1976d2' : undefined                    },
+                    '& .MuiMenuItem-root.Mui-selected': {
+                      backgroundColor: theme.palette.mode === 'light' ? '#1976d2' : undefined,
+                      color: theme.palette.mode === 'light' ? 'white' : undefined,
+                      '&:hover': {
+                        backgroundColor: theme.palette.mode === 'light' ? '#1976d2' : undefined,
+                      }                    }
+                  }
+                }
+              }
+            }}
           >
             <MenuItem value="ALL">All Statuses</MenuItem>
             <MenuItem value="BACKLOG">Backlog</MenuItem>
@@ -266,6 +284,9 @@ export default function Todos() {
                   '&:last-child td, &:last-child th': { border: 0 },
                   '&:nth-of-type(odd)': {
                     backgroundColor: (theme) => theme.palette.mode === 'light' ? '#e0e0e0' : theme.palette.action.hover,
+                  },
+                  '&:hover': {
+                    // backgroundColor: (theme) => theme.palette.mode === 'light' ? '#e0e0e0' : theme.palette.action.hover,
                   },
                 }}
               >

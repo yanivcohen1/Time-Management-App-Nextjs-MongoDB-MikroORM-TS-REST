@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Box, Card, CardContent, Typography, IconButton } from '@mui/material';
+import { Box, Card, CardContent, Typography, IconButton, useTheme } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import api from '../lib/axios';
 import TodoModal from './TodoModal';
@@ -31,6 +31,7 @@ const columnColors: Record<string, string> = {
 
 const KanbanBoard = () => {
   const { selectedUserId } = useAuth();
+  const theme = useTheme();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [columnsData, setColumnsData] = useState<Record<string, Todo[]>>({
     BACKLOG: [],
@@ -193,11 +194,11 @@ const KanbanBoard = () => {
                           {...provided.dragHandleProps}
                           sx={{
                             mb: 2,
-                            bgcolor: snapshot.isDragging ? 'action.hover' : '#1e1e1e',
-                            color: 'white',
+                            bgcolor: snapshot.isDragging ? 'action.hover' : (theme.palette.mode === 'light' ? '#f5f5f5' : '#1e1e1e'),
+                            color: theme.palette.mode === 'light' ? 'black' : 'white',
                             cursor: 'grab',
                             '&:hover': {
-                              bgcolor: '#2a2a2a', // Lighter background on hover
+                              bgcolor: theme.palette.mode === 'light' ? '#afc0d1ff' : '#2a2a2a',
                             },
                             ...provided.draggableProps.style,
                           }}
@@ -207,24 +208,24 @@ const KanbanBoard = () => {
                                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                                 {todo.title}
                                 </Typography>
-                                <IconButton size="small" onClick={() => handleEdit(todo)} sx={{ color: 'white' }}>
+                                <IconButton size="small" onClick={() => handleEdit(todo)} sx={{ color: theme.palette.mode === 'light' ? 'black' : 'white' }}>
                                     <EditIcon fontSize="small" />
                                 </IconButton>
                             </Box>
                             
                             {todo.description && (
-                                <Typography variant="body2" sx={{ color: 'grey.500', mb: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                <Typography variant="body2" sx={{ color: theme.palette.mode === 'light' ? 'grey.700' : 'grey.500', mb: 2, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                     {todo.description}
                                 </Typography>
                             )}
 
                             {todo.dueTime && (
-                                <Typography variant="caption" sx={{ color: 'grey.500', display: 'block' }}>
+                                <Typography variant="caption" sx={{ color: theme.palette.mode === 'light' ? 'grey.700' : 'grey.500', display: 'block' }}>
                                     Due: {new Date(todo.dueTime).toLocaleDateString()}
                                 </Typography>
                             )}
                             {todo.duration && (
-                                <Typography variant="caption" sx={{ color: 'grey.500', display: 'block' }}>
+                                <Typography variant="caption" sx={{ color: theme.palette.mode === 'light' ? 'grey.700' : 'grey.500', display: 'block' }}>
                                     Duration: {todo.duration} hours
                                 </Typography>
                             )}
