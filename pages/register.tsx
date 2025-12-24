@@ -1,41 +1,22 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 import api from '../lib/axios';
-import { useAuth } from '../context/AuthContext';
 import { useSnackbar } from 'notistack';
 import Link from 'next/link';
 
-export default function Login() {
+export default function Register() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleLogin = async (e?: React.FormEvent) => {
+  const handleRegister = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     try {
-      const res = await api.post('/auth/login', { email, password });
-      login(res.data.token, res.data.user);
-      enqueueSnackbar('Login successful', { variant: 'success' });
-    } catch {
-      // Handled by interceptor
-    }
-  };
-
-  const handleDemoLogin = (role: 'user' | 'admin') => {
-    if (role === 'admin') {
-      setEmail('admin@todo.dev');
-      setPassword('ChangeMe123!');
-    } else {
-      setEmail('user@todo.dev');
-      setPassword('ChangeMe123!');
-    }
-  };
-
-  const handleSeed = async () => {
-    try {
-      await api.post('/auth/seed');
-      enqueueSnackbar('Database seeded with demo data', { variant: 'success' });
+      await api.post('/auth/register', { name, email, password });
+      enqueueSnackbar('Registration successful! Please log in.', { variant: 'success' });
+      // Optionally redirect to login
+      window.location.href = '/login';
     } catch {
       // Handled by interceptor
     }
@@ -52,10 +33,22 @@ export default function Login() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Sign in
+          Sign up
         </Typography>
         <Paper sx={{ p: 4, mt: 2, width: '100%' }}>
-          <Box component="form" onSubmit={handleLogin} noValidate>
+          <Box component="form" onSubmit={handleRegister} noValidate>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Full Name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
             <TextField
               margin="normal"
               required
@@ -64,7 +57,6 @@ export default function Login() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -76,7 +68,7 @@ export default function Login() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -86,24 +78,13 @@ export default function Login() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
-            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-              <Button fullWidth variant="outlined" onClick={() => handleDemoLogin('user')}>
-                Demo User
-              </Button>
-              <Button fullWidth variant="outlined" onClick={() => handleDemoLogin('admin')}>
-                Demo Admin
+            <Box sx={{ textAlign: 'center' }}>
+              <Button component={Link} href="/login" variant="text">
+                Already have an account? Sign in
               </Button>
             </Box>
-            <Button fullWidth color="secondary" onClick={handleSeed}>
-              Reset & Seed Data
-            </Button>
-          </Box>
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Button component={Link} href="/register" variant="text">
-              Need an account? Create one
-            </Button>
           </Box>
         </Paper>
       </Box>
