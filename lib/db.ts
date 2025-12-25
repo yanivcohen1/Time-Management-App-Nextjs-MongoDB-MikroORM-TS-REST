@@ -18,9 +18,9 @@ export const withORM = (handler: NextApiHandler) => async (req: NextApiRequest, 
   const orm = await getORM();
   return RequestContext.create(orm.em, async () => {
     try {
-      return handler(req, res);
+      return await handler(req, res);
     } catch (error) {
-    return handleError(error);
+    return await handleError(error, res);
   }
   });
 };
