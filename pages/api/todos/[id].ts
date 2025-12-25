@@ -24,7 +24,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (title !== undefined) todo.title = title;
     if (description !== undefined) todo.description = description;
     if (status !== undefined) todo.status = status;
-    if (dueTime !== undefined) todo.dueTime = dueTime ? new Date(dueTime) : undefined;
+    if (dueTime !== undefined) {
+      if (dueTime) {
+        const dueDate = new Date(dueTime);
+        if (isNaN(dueDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid dueTime format' });
+        }
+        todo.dueTime = dueDate;
+      } else {
+        todo.dueTime = undefined;
+      }
+    }
     if (duration !== undefined) todo.duration = duration;
 
     await em.flush();

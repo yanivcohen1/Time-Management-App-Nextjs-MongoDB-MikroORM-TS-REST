@@ -43,12 +43,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if ((startDate && typeof startDate === 'string') || (endDate && typeof endDate === 'string')) {
         const dateFilter: { $gte?: Date; $lte?: Date } = {};
         if (startDate && typeof startDate === 'string') {
-           dateFilter.$gte = new Date(startDate);
+          const start = new Date(startDate);
+          if (isNaN(start.getTime())) {
+            return res.status(400).json({ message: 'Invalid startDate format' });
+          }
+          dateFilter.$gte = start;
         }
         if (endDate && typeof endDate === 'string') {
-           const end = new Date(endDate);
-           end.setHours(23, 59, 59, 999);
-           dateFilter.$lte = end;
+          const end = new Date(endDate);
+          if (isNaN(end.getTime())) {
+            return res.status(400).json({ message: 'Invalid endDate format' });
+          }
+          end.setHours(23, 59, 59, 999);
+          dateFilter.$lte = end;
         }
         filter.dueTime = dateFilter;
       }
@@ -82,7 +89,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const todo = new Todo(title, user);
     if (description) todo.description = description;
-    if (dueTime) todo.dueTime = new Date(dueTime);
+    if (dueTime) {
+      const dueDate = new Date(dueTime);
+      if (isNaN(dueDate.getTime())) {
+        return res.status(400).json({ message: 'Invalid dueTime format' });
+      }
+      todo.dueTime = dueDate;
+    }
     if (status) todo.status = status;
     if (duration) todo.duration = duration;
 
