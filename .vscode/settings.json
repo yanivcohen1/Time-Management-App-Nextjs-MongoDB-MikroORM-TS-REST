@@ -1,0 +1,7 @@
+{
+  "jest.enable": false,
+  "playwright.testConfig": "${workspaceFolder}/playwright.config.ts",
+  "cypressTestExplorer.configFilePath": "cypress.config.ts",
+  "cypressTestExplorer.projectPath": "",
+  "cypressTestExplorer.startingFolder": "cypress/e2e",
+}
