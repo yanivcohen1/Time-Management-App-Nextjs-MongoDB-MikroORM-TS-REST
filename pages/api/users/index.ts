@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { withORM, getORM } from '../../../lib/db';
 import { User } from '../../../entities/User';
 import { isAuthenticated } from '../../../lib/auth';
-import { handleError, json, ApiError } from "@/lib/http";
+import { ApiError } from "@/lib/http";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const userPayload = isAuthenticated(req, res);

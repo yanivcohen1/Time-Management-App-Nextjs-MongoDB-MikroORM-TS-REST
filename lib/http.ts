@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);

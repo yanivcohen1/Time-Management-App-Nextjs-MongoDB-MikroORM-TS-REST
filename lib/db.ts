@@ -2,7 +2,7 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { MongoDriver, MongoEntityManager } from '@mikro-orm/mongodb';
 import config from '../mikro-orm.config';
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import { handleError, json, ApiError } from "@/lib/http";
+import { handleError } from "@/lib/http";
 
 // Global cache to prevent multiple connections in dev
 const globalForORM = global as unknown as { orm: MikroORM<MongoDriver> };
