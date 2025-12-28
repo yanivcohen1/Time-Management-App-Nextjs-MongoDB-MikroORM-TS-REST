@@ -1,7 +1,7 @@
 "use client";
 
 import { Stack, Typography } from "@mui/material";
-import { InterWorkspacePanel } from "@/components/dashboard/InterWorkspacePanel";
+import { InterWorkspacePanel } from "./InterWorkspacePanel";
 
 export type InterWorkspaceSectionProps = {
   title?: string;
