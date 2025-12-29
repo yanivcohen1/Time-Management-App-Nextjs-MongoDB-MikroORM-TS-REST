@@ -1,4 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -11,7 +13,7 @@ import {
 } from '@mui/material';
 import api from '../lib/axios';
 import { useSnackbar } from 'notistack';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface Todo {
   id: string;
@@ -73,7 +75,7 @@ const TodoModal = ({ open, onClose, todo, onSuccess }: TodoModalProps) => {
       }
       onClose();
       if (onSuccess) onSuccess();
-      else router.reload(); // Refresh current page
+      else router.refresh(); // Refresh current page
     } catch {
       // Error handled by interceptor
     }

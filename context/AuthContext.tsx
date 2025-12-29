@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import api from '../lib/axios';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 interface User {
   id: string;

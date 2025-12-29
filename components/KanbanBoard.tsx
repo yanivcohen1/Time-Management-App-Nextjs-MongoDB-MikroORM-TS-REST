@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Box, Card, CardContent, Typography, IconButton, useTheme, useMediaQuery } from '@mui/material';

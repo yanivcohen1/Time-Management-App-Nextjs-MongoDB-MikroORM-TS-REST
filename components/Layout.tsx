@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import {
   AppBar,
@@ -39,7 +41,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useThemeContext } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import { useRouter } from 'next/router';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import TodoModal from './TodoModal';
 import api from '../lib/axios';
 
@@ -56,6 +58,8 @@ export default function Layout({ children }: LayoutProps) {
   const { toggleColorMode, mode } = useThemeContext();
   const { logout, user, selectedUserId, setSelectedUserId } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [users, setUsers] = useState<{id: string, name: string}[]>([]);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
@@ -67,10 +71,10 @@ export default function Layout({ children }: LayoutProps) {
   }, [user]);
 
   React.useEffect(() => {
-    if (router.pathname.startsWith('/admin')) {
+    if (pathname.startsWith('/admin')) {
       setAdminMenuOpen(true);
     }
-  }, [router.pathname]);
+  }, [pathname]);
 
   const listItemSx = {
     '&:hover': {
@@ -113,7 +117,7 @@ export default function Layout({ children }: LayoutProps) {
         <ListItem disablePadding>
           <ListItemButton 
             onClick={() => handleNavigation('/workload')}
-            selected={router.pathname === '/workload' || router.pathname === '/'}
+            selected={pathname === '/workload' || pathname === '/'}
             sx={listItemSx}
           >
             <ListItemIcon>
@@ -129,7 +133,7 @@ export default function Layout({ children }: LayoutProps) {
         <ListItem disablePadding>
           <ListItemButton 
             onClick={() => handleNavigation('/todos')}
-            selected={router.pathname === '/todos' && !router.query.deleted}
+            selected={pathname === '/todos' && !searchParams.get('deleted')}
             sx={listItemSx}
           >
             <ListItemIcon>
@@ -153,7 +157,7 @@ export default function Layout({ children }: LayoutProps) {
         <ListItem disablePadding>
           <ListItemButton 
             onClick={() => handleNavigation('/board')}
-            selected={router.pathname === '/board'}
+            selected={pathname === '/board'}
             sx={listItemSx}
           >
             <ListItemIcon>
@@ -181,8 +185,8 @@ export default function Layout({ children }: LayoutProps) {
               <List component="div" disablePadding>
                 <ListItem disablePadding>
                   <ListItemButton 
-                    onClick={() => handleNavigation('/admin')}
-                    selected={router.pathname.startsWith('/admin') && !router.pathname.startsWith('/admin/inner')}
+                    onClick={() => handleNavigation('/admin/1')}
+                    selected={pathname.startsWith('/admin') && !pathname.startsWith('/admin/inner')}
                     sx={{ ...listItemSx, pl: 4 }}
                   >
                     <ListItemIcon>
@@ -194,7 +198,7 @@ export default function Layout({ children }: LayoutProps) {
                 <ListItem disablePadding>
                   <ListItemButton 
                     onClick={() => handleNavigation('/admin/inner/2?id=1&name=yar')}
-                    selected={router.pathname === '/admin/inner/[innerId]' && router.query.innerId === '2'}
+                    selected={pathname.startsWith('/admin/inner')}
                     sx={{ ...listItemSx, pl: 4 }}
                   >
                     <ListItemIcon>

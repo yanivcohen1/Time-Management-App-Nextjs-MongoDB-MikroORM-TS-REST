@@ -29,6 +29,11 @@
       "jest",
       "@testing-library/jest-dom",
       "cypress"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
     ]
   },
   "exclude": [
@@ -42,6 +47,8 @@
     "next-env.d.ts",
     "**/*.mts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ]
 }

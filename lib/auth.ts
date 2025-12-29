@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest } from 'next/server';
 
 const SECRET = process.env.JWT_ACCESS_SECRET || 'secret';
 const TTL = parseInt(process.env.JWT_ACCESS_TTL_SECONDS || '3600', 10);
@@ -38,6 +39,26 @@ export const isAuthenticated = (req: NextApiRequest, res: NextApiResponse) => {
   const payload = verifyToken(token);
   if (!payload) {
     res.status(401).json({ message: 'Invalid token' });
+    return null;
+  }
+  return payload;
+};
+
+export const getAuthTokenApp = (request: NextRequest) => {
+  const authHeader = request.headers.get('authorization');
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    return authHeader.substring(7);
+  }
+  return null;
+};
+
+export const isAuthenticatedApp = (request: NextRequest) => {
+  const token = getAuthTokenApp(request);
+  if (!token) {
+    return null;
+  }
+  const payload = verifyToken(token);
+  if (!payload) {
     return null;
   }
   return payload;
