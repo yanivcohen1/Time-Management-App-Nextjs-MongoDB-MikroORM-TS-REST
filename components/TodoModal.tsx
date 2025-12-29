@@ -75,7 +75,10 @@ const TodoModal = ({ open, onClose, todo, onSuccess }: TodoModalProps) => {
       }
       onClose();
       if (onSuccess) onSuccess();
-      else router.refresh(); // Refresh current page
+      else {
+        window.dispatchEvent(new Event('refresh-todos'));
+        router.refresh(); // Refresh current page
+      }
     } catch {
       // Error handled by interceptor
     }

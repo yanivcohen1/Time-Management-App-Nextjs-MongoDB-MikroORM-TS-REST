@@ -57,7 +57,7 @@ export default function TodosPage() {
   const [filterEndDate, setFilterEndDate] = useState('');
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<keyof Todo>('title');
@@ -101,6 +101,7 @@ export default function TodosPage() {
       params.limit = rowsPerPage.toString();
       params.orderBy = orderBy;
       params.order = order;
+      params._t = Date.now().toString(); // Avoid caching
 
       const res = await api.get('/todos', { params });
       setTodos(res.data.items);
@@ -122,6 +123,12 @@ export default function TodosPage() {
       fetchTodos();
     }
   }, [user, fetchTodos]);
+
+  useEffect(() => {
+    const handler = () => fetchTodos();
+    window.addEventListener('refresh-todos', handler);
+    return () => window.removeEventListener('refresh-todos', handler);
+  }, [fetchTodos]);
 
   const [deleteAnchorEl, setDeleteAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -224,9 +231,6 @@ export default function TodosPage() {
             }}
           />
         </Stack>
-        <Button variant="contained" onClick={() => setIsModalOpen(true)}>
-          Create Todo
-        </Button>
       </Box>
 
       <TableContainer component={Paper}>

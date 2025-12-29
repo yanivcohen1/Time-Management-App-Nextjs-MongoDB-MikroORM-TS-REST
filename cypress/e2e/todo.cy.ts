@@ -19,14 +19,16 @@ describe('Agile Tasks', () => {
     cy.get('body').type('{esc}'); // Close any open modals
 
     // Create Todo
-    cy.get('nav').contains('Create').click();
+    cy.get('[data-testid="sidebar-create"]').click();
     cy.get('input[name="title"]').type('New Cypress Todo');
     cy.get('textarea[name="description"]').type('Description for Cypress');
     cy.contains('button', 'Create').click();
     cy.wait(1000); // Wait for modal to close
+    cy.reload(); // Reload to get fresh data
 
     // Sort by newest first
     cy.contains('Created At').click();
+    cy.wait(2000); // Wait for sort
 
     // Verify Todo Created
     cy.contains('New Cypress Todo').scrollIntoView().should('be.visible');

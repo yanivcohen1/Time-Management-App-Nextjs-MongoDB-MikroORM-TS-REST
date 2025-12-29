@@ -143,7 +143,7 @@ export default function Layout({ children }: LayoutProps) {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => setIsModalOpen(true)}>
+          <ListItemButton onClick={() => setIsModalOpen(true)} data-testid="sidebar-create">
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
