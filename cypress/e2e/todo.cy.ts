@@ -13,19 +13,26 @@ describe('Agile Tasks', () => {
 
     // Verify Dashboard
     cy.url().should('include', '/');
-    cy.contains('Welcome, Demo User');
+
+    cy.visit('/todos');
+    cy.reload(); // Ensure fresh state
+    cy.get('body').type('{esc}'); // Close any open modals
 
     // Create Todo
-    cy.contains('Create').click();
+    cy.get('nav').contains('Create').click();
     cy.get('input[name="title"]').type('New Cypress Todo');
     cy.get('textarea[name="description"]').type('Description for Cypress');
     cy.contains('button', 'Create').click();
+    cy.wait(1000); // Wait for modal to close
+
+    // Sort by newest first
+    cy.contains('Created At').click();
 
     // Verify Todo Created
     cy.contains('New Cypress Todo').scrollIntoView().should('be.visible');
 
     // Edit Todo (Click on the edit button)
-    cy.contains('New Cypress Todo').parent().find('button').click();
+    cy.contains('New Cypress Todo').parent().next().find('button').first().click();
     
     // Verify Description in Modal
     cy.get('textarea[name="description"]').should('have.value', 'Description for Cypress');

@@ -7,6 +7,7 @@ describe('Responsive Kanban Board', () => {
     cy.get('input[name="password"]').type('ChangeMe123!');
     cy.get('button[type="submit"]').click();
     cy.url().should('include', '/');
+    cy.visit('/board');
   });
 
   it('should display columns in a row on desktop', () => {

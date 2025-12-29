@@ -38,6 +38,7 @@ interface Todo {
   status: string;
   dueTime?: string;
   duration?: number;
+  createdAt?: string;
 }
 
 export default function TodosPage() {
@@ -223,6 +224,9 @@ export default function TodosPage() {
             }}
           />
         </Stack>
+        <Button variant="contained" onClick={() => setIsModalOpen(true)}>
+          Create Todo
+        </Button>
       </Box>
 
       <TableContainer component={Paper}>
@@ -274,6 +278,15 @@ export default function TodosPage() {
                   Duration
                 </TableSortLabel>
               </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'createdAt'}
+                  direction={orderBy === 'createdAt' ? order : 'asc'}
+                  onClick={() => handleRequestSort('createdAt')}
+                >
+                  Created At
+                </TableSortLabel>
+              </TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -313,6 +326,9 @@ export default function TodosPage() {
                 </TableCell>
                 <TableCell>
                   {todo.duration ? `${todo.duration} hours` : '-'}
+                </TableCell>
+                <TableCell>
+                  {todo.createdAt ? new Date(todo.createdAt).toLocaleDateString() : '-'}
                 </TableCell>
                 <TableCell align="right">
                   <IconButton onClick={() => handleEdit(todo)}>
