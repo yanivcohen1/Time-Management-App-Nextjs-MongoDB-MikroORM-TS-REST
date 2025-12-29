@@ -56,7 +56,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   const breadcrumbItems: MenuItem[] = useMemo(
     () => [
       {
-        label: "Admin",
+        label: "Console",
         icon: "pi pi-shield",
         command: () => {
           setActiveView("admin");
