@@ -47,8 +47,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   const [activeView, setActiveView] = useState<"admin" | "user">(() => (pathname?.includes("/user/") ? "user" : "admin"));
   const resolvedActiveView = pathname?.startsWith("/admin") ? (pathname.includes("/user/") ? "user" : "admin") : activeView;
   const transitionKey = pathname ?? resolvedActiveView ?? "admin";
-  const defaultInterWorkspaceEnabled = pathname?.includes("/user/") ?? false;
-  const [interWorkspaceEnabled, setInterWorkspaceEnabled] = useState(defaultInterWorkspaceEnabled);
+  const [interWorkspaceEnabled, setInterWorkspaceEnabled] = useState(false);
 
   const handleInterWorkspaceToggle = (enabled: boolean) => {
     setInterWorkspaceEnabled(enabled);
