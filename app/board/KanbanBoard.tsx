@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Box, Card, CardContent, Typography, IconButton, useTheme, useMediaQuery } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import api from '../lib/axios';
-import TodoModal from './TodoModal';
-import { useAuth } from '../context/AuthContext';
+import api from '@/lib/axios';
+import TodoModal from '@/components/TodoModal';
+import { useAuth } from '@/context/AuthContext';
 
 interface Todo {
   id: string;

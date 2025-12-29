@@ -18,8 +18,8 @@ import {
   Chip,
   Box
 } from "@mui/material";
-import { useSession } from "../../context/AuthContext";
-import api from "../../lib/axios";
+import { useSession } from "@/context/AuthContext";
+import api from "@/lib/axios";
 
 type InterWorkspacePanelProps = {
   title?: string;

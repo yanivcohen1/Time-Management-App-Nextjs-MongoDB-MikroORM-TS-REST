@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Typography, Box } from '@mui/material';
 
-const KanbanBoard = dynamic(() => import('../../components/KanbanBoard'), { ssr: false });
+const KanbanBoard = dynamic(() => import('./KanbanBoard'), { ssr: false });
 
 export default function Board() {
   const { user, loading } = useAuth();
