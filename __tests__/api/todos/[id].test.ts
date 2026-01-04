@@ -3,10 +3,12 @@ import { NextRequest } from 'next/server';
 import { PUT, DELETE } from '../../../app/api/todos/[id]/route';
 import { isAuthenticatedApp } from '../../../lib/auth';
 import { getORM } from '../../../lib/db';
+import { ObjectId } from '@mikro-orm/mongodb';
 
 jest.mock('../../../lib/auth');
 jest.mock('../../../lib/db', () => ({
   getORM: jest.fn(),
+  withORM: (handler: any) => handler,
 }));
 jest.mock('@mikro-orm/core', () => {
   const actual = jest.requireActual('@mikro-orm/core');
@@ -30,7 +32,7 @@ describe('/api/todos/[id]', () => {
   }));
 
   const validUserId = '507f1f77bcf86cd799439011';
-  const todoId = 'todo-123';
+  const todoId = '507f1f77bcf86cd799439012';
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -55,7 +57,7 @@ describe('/api/todos/[id]', () => {
     expect(response.status).toBe(200);
     expect(mockFindOne).toHaveBeenCalledWith(
       expect.anything(),
-      { id: todoId, owner: validUserId }
+      { _id: new ObjectId(todoId), owner: new ObjectId(validUserId) }
     );
     expect(mockFlush).toHaveBeenCalled();
   });
@@ -74,7 +76,7 @@ describe('/api/todos/[id]', () => {
     expect(response.status).toBe(200);
     expect(mockFindOne).toHaveBeenCalledWith(
       expect.anything(),
-      { id: todoId }
+      { _id: new ObjectId(todoId) }
     );
     expect(mockFlush).toHaveBeenCalled();
   });
@@ -91,7 +93,7 @@ describe('/api/todos/[id]', () => {
     expect(response.status).toBe(200);
     expect(mockFindOne).toHaveBeenCalledWith(
       expect.anything(),
-      { id: todoId, owner: validUserId }
+      { _id: new ObjectId(todoId), owner: new ObjectId(validUserId) }
     );
     expect(mockRemoveAndFlush).toHaveBeenCalled();
   });

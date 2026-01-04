@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getORM } from '@/lib/db';
+import { getORM, handleError } from '@/lib/db';
 import { User } from '@/entities/User';
 import { isAuthenticatedApp } from '@/lib/auth';
 
@@ -24,4 +24,4 @@ async function handlerGET(request: NextRequest) {
   }
 }
 
-export const GET = handlerGET;
+export const GET = handleError(handlerGET);

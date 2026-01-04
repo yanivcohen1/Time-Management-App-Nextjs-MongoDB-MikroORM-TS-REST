@@ -8,7 +8,7 @@ export class ApiError extends Error {
 
 export const json = <T>(data: T, init?: ResponseInit) => NextResponse.json(data, init);
 
-export const handleError = (error: unknown) => {
+export const handleApiError = (error: unknown) => {
   if (error instanceof ApiError) {
     return NextResponse.json({ message: error.message }, { status: error.status });
   }

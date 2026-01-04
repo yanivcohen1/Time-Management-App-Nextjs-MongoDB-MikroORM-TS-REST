@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
-import { getORM } from '@/lib/db';
+import { getORM, handleError } from '@/lib/db';
 import { User } from '@/entities/User';
 import { hashPassword } from '@/lib/password';
 
-export async function POST(request: NextRequest) {
+export async function handlerPOST(request: NextRequest) {
   try {
     const { name, email, password } = await request.json();
 
@@ -31,3 +31,5 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
+
+export const POST = handleError(handlerPOST);

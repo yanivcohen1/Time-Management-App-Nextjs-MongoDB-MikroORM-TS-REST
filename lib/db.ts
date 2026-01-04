@@ -1,8 +1,7 @@
-import { MikroORM, RequestContext } from '@mikro-orm/core';
+import { MikroORM } from '@mikro-orm/core';
 import { MongoDriver, MongoEntityManager } from '@mikro-orm/mongodb';
 import config from '../mikro-orm.config';
-import { NextRequest, NextResponse } from 'next/server';
-import { handleError } from "@/lib/http";
+import { handleApiError } from "@/lib/http";
 
 // Global cache to prevent multiple connections in dev
 const globalForORM = global as unknown as { orm: MikroORM<MongoDriver> };
@@ -14,13 +13,12 @@ export const getORM = async () => {
   return globalForORM.orm;
 };
 
-type AppRouterHandler = (req: NextRequest) => NextResponse | Response | Promise<NextResponse> | Promise<Response>;
-
-export const withORM = (handler: AppRouterHandler) => async (req: NextRequest) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const handleError = (handler: (...args: any[]) => any) => async (...args: any[]) => {
     try {
-      return await handler(req);
+      return await handler(...args);
     } catch (error) {
-      return await handleError(error);
+      return await handleApiError(error);
     }
 };
 

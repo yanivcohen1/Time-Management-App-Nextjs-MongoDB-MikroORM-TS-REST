@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getORM, withORM } from '@/lib/db';
+import { getORM, handleError } from '@/lib/db';
 import { Todo, TodoStatus } from '@/entities/Todo';
 import { isAuthenticatedApp } from '@/lib/auth';
 import { User } from '@/entities/User';
@@ -133,5 +133,5 @@ async function handlerPOST(request: NextRequest) {
   return NextResponse.json(serialize(todo), { status: 201 });
 }
 
-export const GET = withORM(handlerGET);
-export const POST = withORM(handlerPOST);
+export const GET = handleError(handlerGET);
+export const POST = handleError(handlerPOST);
