@@ -10,10 +10,10 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   coverageReporters: ['json', 'lcov', 'text', 'clover', 'html'],
   collectCoverageFrom: [
-    'app/**/*.{js,jsx,ts,tsx}',
-    'components/**/*.{js,jsx,ts,tsx}',
-    'lib/**/*.{js,jsx,ts,tsx}',
-    'entities/**/*.{js,jsx,ts,tsx}',
+    'src/app/**/*.{js,jsx,ts,tsx}',
+    'src/components/**/*.{js,jsx,ts,tsx}',
+    'src/lib/**/*.{js,jsx,ts,tsx}',
+    'src/entities/**/*.{js,jsx,ts,tsx}',
     '!**/node_modules/**',
     '!**/.next/**',
     '!**/cypress/**',
@@ -44,7 +44,7 @@ const customJestConfig = {
         '<rootDir>/node_modules/',
       ],
       moduleNameMapper: {
-        '^@/(.*)$': '<rootDir>/$1',
+        '^@/(.*)$': '<rootDir>/src/$1',
       },
       transform: {
         '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-typescript'] }],

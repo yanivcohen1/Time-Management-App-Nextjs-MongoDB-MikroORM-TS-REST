@@ -1,12 +1,12 @@
 import { expect, describe, it, beforeEach } from '@jest/globals';
 import { NextRequest } from 'next/server';
-import { PUT, DELETE } from '../../../app/api/todos/[id]/route';
-import { isAuthenticatedApp } from '../../../lib/auth';
-import { getORM } from '../../../lib/db';
+import { PUT, DELETE } from '../../../src/app/api/todos/[id]/route';
+import { isAuthenticatedApp } from '../../../src/lib/auth';
+import { getORM } from '../../../src/lib/db';
 import { ObjectId } from '@mikro-orm/mongodb';
 
-jest.mock('../../../lib/auth');
-jest.mock('../../../lib/db', () => ({
+jest.mock('../../../src/lib/auth');
+jest.mock('../../../src/lib/db', () => ({
   getORM: jest.fn(),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleError: (handler: any) => handler,
@@ -18,7 +18,7 @@ jest.mock('@mikro-orm/core', () => {
     serialize: jest.fn((obj) => obj),
   };
 });
-jest.mock('../../../entities/Todo', () => ({
+jest.mock('../../../src/entities/Todo', () => ({
   Todo: class {},
 }));
 
