@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.gitignore
+.env*
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+cypress
+coverage
+temp
+lint_output.txt
+eslint_output.txt
+README.md
+planning instractions.txt

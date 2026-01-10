@@ -162,6 +162,8 @@ pnpm lint
 | `pnpm test` | Runs unit and integration tests using Jest. |
 | `pnpm test:e2e` | Runs end-to-end tests using Cypress (headless mode). |
 | `pnpm seed` | Seeds the database with initial data. |
+| `pnpm docker` | To start the application and the database together
+| `mikro-orm:create` | To create a migration (e.g., for data seeding or manual schema changes)
 
 ## Main Page
 

@@ -11,7 +11,15 @@
     "test:coverage": "jest --coverage",
     "test:e2e": "cypress run --e2e --browser chrome",
     "test:e2e:report": "rimraf cypress/reports && cypress run --e2e --browser chrome",
-    "seed": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/seed.ts"
+    "seed": "ts-node -O \"{\\\"module\\\":\\\"commonjs\\\"}\" scripts/seed.ts",
+    "mikro-orm:create": "mikro-orm migration:create",
+    "docker": "docker-compose up --build"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./mikro-orm.config.ts"
+    ]
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

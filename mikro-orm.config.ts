@@ -10,4 +10,8 @@ export default defineConfig({
   clientUrl: process.env.DATABASE_URL,
   metadataProvider: ReflectMetadataProvider,
   debug: process.env.NODE_ENV !== 'production',
+  migrations: {
+    path: './migrations',
+    pathTs: './migrations',
+  },
 });
