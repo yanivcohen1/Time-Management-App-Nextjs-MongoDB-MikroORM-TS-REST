@@ -11,7 +11,7 @@ const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.en
 dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
 // Update config clientUrl if it was undefined when config was imported
-if (!config.clientUrl && process.env.DATABASE_URL) {
+if (process.env.DATABASE_URL) {
     config.clientUrl = process.env.DATABASE_URL;
 }
 
