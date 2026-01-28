@@ -1,9 +1,8 @@
-import { NextRequest } from 'next/server';
 import { getORM, handleError } from '@/lib/db';
 import { User } from '@/entities/User';
 import { isAuthenticatedApp } from '@/lib/auth';
 
-async function handlerGET(request: NextRequest) {
+async function handlerGET() {
   const userPayload = await isAuthenticatedApp();
   if (!userPayload) return Response.json({ message: 'Unauthorized' }, { status: 401 });
 

@@ -52,7 +52,7 @@ describe('/api/todos', () => {
         fork: mockFork,
       } as unknown,
     } as unknown as Awaited<ReturnType<typeof getORM>>);
-    vi.mocked(isAuthenticatedApp).mockReturnValue({ userId: validUserId, role: 'user' });
+    vi.mocked(isAuthenticatedApp).mockResolvedValue({ userId: validUserId, role: 'user' });
   });
 
   it('GET returns todos', async () => {
@@ -92,7 +92,7 @@ describe('/api/todos', () => {
   });
 
   it('returns 401 if not authenticated', async () => {
-    vi.mocked(isAuthenticatedApp).mockReturnValue(null);
+    vi.mocked(isAuthenticatedApp).mockRejectedValue(new Error('Unauthorized'));
 
     const request = new NextRequest('http://localhost/api/todos', { method: 'GET' });
 
@@ -100,7 +100,7 @@ describe('/api/todos', () => {
   });
 
   it('GET returns all todos for admin', async () => {
-    vi.mocked(isAuthenticatedApp).mockReturnValue({ userId: validUserId, role: 'admin' });
+    vi.mocked(isAuthenticatedApp).mockResolvedValue({ userId: validUserId, role: 'admin' });
     const request = new NextRequest('http://localhost/api/todos', { method: 'GET' });
 
     mockFindAndCount.mockResolvedValue([[{ id: '1', title: 'Test Todo' }], 1]);

@@ -48,7 +48,7 @@ describe('/api/todos/[id]', () => {
         fork: mockFork,
       } as unknown,
     } as unknown as Awaited<ReturnType<typeof getORM>>);
-    vi.mocked(isAuthenticatedApp).mockReturnValue({ userId: validUserId, role: 'user' });
+    vi.mocked(isAuthenticatedApp).mockResolvedValue({ userId: validUserId, role: 'user' });
   });
 
   it('PUT updates todo for owner', async () => {
@@ -70,7 +70,7 @@ describe('/api/todos/[id]', () => {
   });
 
   it('PUT updates todo for admin', async () => {
-    vi.mocked(isAuthenticatedApp).mockReturnValue({ userId: validUserId, role: 'admin' });
+    vi.mocked(isAuthenticatedApp).mockResolvedValue({ userId: validUserId, role: 'admin' });
     const request = new NextRequest('http://localhost/api/todos/todo-123', {
       method: 'PUT',
       body: JSON.stringify({ title: 'Updated Title' }),
@@ -106,7 +106,7 @@ describe('/api/todos/[id]', () => {
   });
 
   it('DELETE removes todo for admin', async () => {
-    vi.mocked(isAuthenticatedApp).mockReturnValue({ userId: validUserId, role: 'admin' });
+    vi.mocked(isAuthenticatedApp).mockResolvedValue({ userId: validUserId, role: 'admin' });
     const request = new NextRequest('http://localhost/api/todos/todo-123', {
       method: 'DELETE',
     });

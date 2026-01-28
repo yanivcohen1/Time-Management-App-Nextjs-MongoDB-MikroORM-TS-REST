@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { NextRequest } from 'next/server';
 import { ApiError } from "@/lib/http";
 import { headers } from 'next/headers';
 
