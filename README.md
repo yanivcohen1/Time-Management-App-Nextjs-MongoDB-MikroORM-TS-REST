@@ -8,10 +8,13 @@ A full-stack Agile Tasks application built with Next.js, MikroORM, MongoDB, and 
 *   **Language**: [TypeScript](https://www.typescriptlang.org/)
 *   **Database**: [MongoDB](https://www.mongodb.com/)
 *   **ORM**: [MikroORM v5](https://mikro-orm.io/)
+*   **API Layer**: [ts-rest](https://ts-rest.com/) (End-to-end typesafe APIs)
+*   **Documentation**: [Swagger UI](https://swagger.io/tools/swagger-ui/) (OpenAPI)
 *   **UI Library**: [Material UI (MUI)](https://mui.com/)
 *   **State Management**: React Context API
 *   **Drag & Drop**: `@hello-pangea/dnd`
 *   **Authentication**: JWT (JSON Web Tokens) with `bcryptjs`
+*   **Schema Validation**: [Zod](https://zod.dev/)
 *   **Testing**:
     *   Unit/Integration: [Vitest](https://vitest.dev/) & [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
     *   End-to-End (E2E): [Cypress](https://www.cypress.io/)
@@ -29,67 +32,51 @@ A full-stack Agile Tasks application built with Next.js, MikroORM, MongoDB, and 
 
 ```
 todo-app-nextjs/
-├── __tests__/           # API tests
-│   └── api/
-│       └── todos/
-├── components/          # Reusable React components
-│   ├── __tests__/       # Component tests
-│   ├── AxiosInterceptor.tsx
-│   ├── KanbanBoard.tsx
-│   ├── Layout.tsx
-│   └── TodoModal.tsx
-├── context/             # React Context definitions
-│   ├── AuthContext.tsx
-│   └── ThemeContext.tsx
 ├── cypress/             # Cypress E2E tests
 │   ├── e2e/             # E2E test specifications
 │   ├── reports/         # Test reports
-│   ├── screenshots/     # Screenshots from tests
-│   ├── support/         # Cypress support files
-│   └── tsconfig.json
-├── entities/            # MikroORM entity definitions
-│   ├── Todo.ts
-│   └── User.ts
-├── lib/                 # Utility functions and configurations
-│   ├── __tests__/       # Utility tests
-│   ├── auth.ts          # Authentication helpers
-│   ├── axios.ts         # Axios instance configuration
-│   ├── db.ts            # Database connection helper
-│   ├── password.ts      # Password hashing utilities
-│   └── seeder.ts        # Database seeding utilities
-├── pages/               # Next.js pages and API routes
-│   ├── api/             # API endpoints
-│   │   ├── auth/
-│   │   ├── hello.ts
-│   │   ├── todos/
-│   │   └── users/
-│   ├── _app.tsx         # App wrapper
-│   ├── _document.tsx
-│   ├── index.tsx        # Home page (Main Status Board - Kanban)
-│   ├── login.tsx        # Login page
-│   ├── todos.tsx        # Track Status (Table view with filtering)
-│   └── workload.tsx     # Dates by Workload view
+│   └── screenshots/     # Screenshots from tests
+├── migrations/          # MikroORM database migrations
 ├── public/              # Static assets
-├── scripts/             # Utility scripts
-│   └── seed.ts          # Database seeding script
-├── styles/              # Global styles
-│   ├── globals.css
-│   └── Home.module.css
-├── temp/                # Temporary files
-├── cypress.config.ts    # Cypress configuration
-├── eslint.config.mjs    # ESLint configuration
-├── vitest.config.ts     # Vitest configuration
-├── vitest.setup.ts      # Vitest setup
-├── mikro-orm.config.ts  # MikroORM configuration
-├── next-env.d.ts        # Next.js type definitions
+├── scripts/             # Utility scripts (e.g., seeding)
+│   └── seed.ts
+├── src/
+│   ├── app/             # Next.js App Router
+│   │   ├── admin/       # Admin views
+│   │   ├── api/         # ts-rest API route handlers
+│   │   │   ├── docs/    # OpenAPI/Swagger spec generation
+│   │   │   └── [[...ts-rest]]/ # Typesafe API endpoints
+│   │   ├── api-docs/    # Swagger UI page
+│   │   ├── board/       # Kanban board view
+│   │   ├── login/       # Login page
+│   │   ├── register/    # Registration page
+│   │   ├── todos/       # Table view (Track Status)
+│   │   └── workload/    # Dates by Workload view
+│   ├── components/      # Shared React components
+│   ├── context/         # React Context (Auth, Theme)
+│   ├── entities/        # MikroORM entities (Todo, User)
+│   ├── lib/             # Core utilities, contract definition, and API clients
+│   │   ├── api-client.ts # ts-rest frontend client
+│   │   ├── contract.ts   # Shared API contract (Zod)
+│   │   ├── db.ts         # MikroORM initialization
+│   │   ├── schemas.ts    # Zod validation schemas
+│   │   └── ...
+│   └── styles/          # Global styles and Material UI theme configuration
+├── mikro-orm.config.ts  # Database configuration
 ├── next.config.ts       # Next.js configuration
-├── package.json         # Project dependencies and scripts
-├── pnpm-lock.yaml       # pnpm lock file
-├── pnpm-workspace.yaml  # pnpm workspace configuration
-├── planning instractions.txt  # Planning instructions
-├── README.md            # This file
+├── package.json         # Dependencies and scripts
+├── vitest.config.ts     # Vitest configuration
 └── tsconfig.json        # TypeScript configuration
 ```
+
+## API Documentation
+
+The project uses **ts-rest** to provide end-to-end typesafe APIs and automatically generate OpenAPI documentation.
+
+- **Swagger UI**: Accessible at `/api-docs` when the dev server is running.
+- **OpenAPI Spec**: The raw JSON spec is generated at `/api/docs`.
+
+The API contract is defined in [src/lib/contract.ts](src/lib/contract.ts) using **Zod** for schema validation.
 
 ## Getting Started
 
@@ -137,14 +124,14 @@ docker-compose up --build
     pnpm install
     ```
 3.  Configure environment variables:
-    *   Ensure `.env.development` exists and contains your MongoDB connection string (`DATABASE_URL`) and `JWT_SECRET`.
+    *   Ensure [.env.development](.env.development) exists and contains your MongoDB connection string (DATABASE_URL) and JWT_SECRET.
 
 ### Database Seeding
 
 To populate the database with initial data (test user and todos):
 
 ```bash
-pnpm seed
+pnpm seed:db
 ```
 
 ### Running the Application
