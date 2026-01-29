@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import { Box, Card, CardContent, Typography, IconButton, useTheme, useMediaQuery } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { apiClient } from '@/lib/api-client';
+import { PaginatedTodosSchema, TodoSchema } from '../api/[[...ts-rest]]/todos';
 import TodoModal from '@/components/TodoModal';
 import { useAuth } from '@/context/AuthContext';
 
@@ -51,7 +52,8 @@ const KanbanBoard = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await apiClient.todos.getTodos({ query: query as any });
     if (res.status === 200) {
-      setTodos(res.body.items as unknown as Todo[]);
+      const validated = PaginatedTodosSchema.parse(res.body);
+      setTodos(validated.items as unknown as Todo[]);
     }
   }, [selectedUserId]);
 
@@ -122,7 +124,9 @@ const KanbanBoard = () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             body: { status: destination.droppableId as any }
         });
-        if (res.status !== 200) {
+        if (res.status === 200) {
+            TodoSchema.parse(res.body);
+        } else {
             fetchTodos();
         }
     }

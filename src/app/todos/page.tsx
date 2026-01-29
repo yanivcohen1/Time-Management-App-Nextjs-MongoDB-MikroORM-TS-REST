@@ -5,6 +5,8 @@ import Layout from '../../components/SideMenu';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '../../lib/api-client';
+import { PaginatedTodosSchema } from '../api/[[...ts-rest]]/todos';
+import { z } from 'zod';
 import {
   Typography,
   Paper,
@@ -95,8 +97,9 @@ export default function TodosPage() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await apiClient.todos.getTodos({ query: query as any });
     if (res.status === 200) {
-      setTodos(res.body.items as unknown as Todo[]);
-      setTotal(res.body.total);
+      const validated = PaginatedTodosSchema.parse(res.body);
+      setTodos(validated.items as unknown as Todo[]);
+      setTotal(validated.total);
     }
   }, [selectedUserId, filterStatus, filterTitle, filterStartDate, filterEndDate, page, rowsPerPage, orderBy, order]);
 
@@ -136,6 +139,7 @@ export default function TodosPage() {
     if (deleteId) {
       const res = await apiClient.todos.deleteTodo({ params: { id: deleteId }, body: {} });
       if (res.status === 200) {
+        z.object({ message: z.string() }).parse(res.body);
         enqueueSnackbar('Todo deleted', { variant: 'success' });
         fetchTodos();
       }

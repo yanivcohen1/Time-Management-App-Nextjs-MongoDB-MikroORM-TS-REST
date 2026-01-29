@@ -12,6 +12,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import { apiClient } from '../lib/api-client';
+import { TodoSchema } from '../app/api/[[...ts-rest]]/todos';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/navigation';
 import { TodoStatus } from '@/entities/Todo';
@@ -74,6 +75,7 @@ const TodoModal = ({ open, onClose, todo, onSuccess }: TodoModalProps) => {
     }
 
     if (res.status === 200 || res.status === 201) {
+      TodoSchema.parse(res.body);
       enqueueSnackbar(todo ? 'Todo updated' : 'Todo created', { variant: 'success' });
       onClose();
       if (onSuccess) onSuccess();

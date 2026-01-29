@@ -14,7 +14,7 @@ export const TodoSchema = z.object({
   status: TodoStatusSchema,
   dueTime: z.string().or(z.date()).optional().nullable(),
   duration: z.number().optional().nullable(),
-  owner: UserSchema.omit({ createdAt: true, updatedAt: true }).optional(),
+  owner: z.union([z.string(), UserSchema.omit({ createdAt: true, updatedAt: true })]).optional().nullable(),
   createdAt: z.string().or(z.date()),
   updatedAt: z.string().or(z.date()),
 });
