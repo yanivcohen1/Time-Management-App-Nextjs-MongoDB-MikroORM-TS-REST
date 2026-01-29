@@ -2,12 +2,27 @@
 import { tsr } from '@ts-rest/serverless/fetch';
 import { c } from '@/lib/init-ts-rest';
 import { z } from 'zod';
-import { 
-  TodoSchema, 
-  TodoStatusSchema, 
-  PaginatedTodosSchema, 
-  ErrorSchema 
-} from '@/lib/schemas';
+import { ErrorSchema } from './common';
+import { UserSchema } from './users';
+
+export const TodoStatusSchema = z.enum(['BACKLOG', 'PENDING', 'IN_PROGRESS', 'COMPLETED']);
+
+export const TodoSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().optional(),
+  status: TodoStatusSchema,
+  dueTime: z.string().or(z.date()).optional().nullable(),
+  duration: z.number().optional().nullable(),
+  owner: UserSchema.omit({ createdAt: true, updatedAt: true }).optional(),
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+});
+
+export const PaginatedTodosSchema = z.object({
+  items: z.array(TodoSchema),
+  total: z.number(),
+});
 
 // --- Get Todos ---
 const getTodos = {

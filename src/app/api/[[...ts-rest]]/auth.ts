@@ -2,7 +2,13 @@
 import { tsr } from '@ts-rest/serverless/fetch';
 import { c } from '@/lib/init-ts-rest';
 import { z } from 'zod';
-import { LoginResponseSchema, ErrorSchema } from '@/lib/schemas';
+import { ErrorSchema } from './common';
+import { UserSchema } from './users';
+
+export const LoginResponseSchema = z.object({
+  token: z.string(),
+  user: UserSchema.omit({ createdAt: true, updatedAt: true }),
+});
 
 // --- Login ---
 const login = {

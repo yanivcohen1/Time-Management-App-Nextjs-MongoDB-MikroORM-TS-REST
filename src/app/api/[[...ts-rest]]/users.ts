@@ -2,7 +2,18 @@
 import { tsr } from '@ts-rest/serverless/fetch';
 import { c } from '@/lib/init-ts-rest';
 import { z } from 'zod';
-import { UserSchema, ErrorSchema } from '@/lib/schemas';
+import { ErrorSchema } from './common';
+
+export const UserRoleSchema = z.enum(['user', 'admin']);
+
+export const UserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  role: UserRoleSchema,
+  createdAt: z.string().or(z.date()),
+  updatedAt: z.string().or(z.date()),
+});
 
 // --- Get Users ---
 const getUsers = {
