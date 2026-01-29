@@ -2,10 +2,17 @@ import { expect, describe, it, beforeEach, vi } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import TodoModal from './TodoModal';
-import api from '../lib/axios';
+import { apiClient } from '../lib/api-client';
 
 // Mock dependencies
-vi.mock('../lib/axios');
+vi.mock('../lib/api-client', () => ({
+  apiClient: {
+    todos: {
+      createTodo: vi.fn(),
+      updateTodo: vi.fn(),
+    },
+  },
+}));
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
     push: vi.fn(),
@@ -42,7 +49,7 @@ describe('TodoModal', () => {
 
   it('submits the form correctly', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(api.post).mockResolvedValue({ data: {} } as any);
+    vi.mocked(apiClient.todos.createTodo).mockResolvedValue({ status: 201, body: {} } as any);
 
     render(
       <TodoModal
@@ -58,11 +65,14 @@ describe('TodoModal', () => {
     fireEvent.click(screen.getByText('Create'));
 
     await waitFor(() => {
-      expect(api.post).toHaveBeenCalledWith('/todos', {
-        title: 'New Todo',
-        description: 'New Description',
-        status: 'BACKLOG',
-        dueTime: undefined,
+      expect(apiClient.todos.createTodo).toHaveBeenCalledWith({
+        body: {
+          title: 'New Todo',
+          description: 'New Description',
+          status: 'BACKLOG',
+          dueTime: undefined,
+          duration: undefined,
+        }
       });
       expect(mockOnSuccess).toHaveBeenCalled();
       expect(mockOnClose).toHaveBeenCalled();

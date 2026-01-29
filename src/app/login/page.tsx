@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
-import api from '../../lib/axios';
+import { apiClient } from '../../lib/api-client';
 import { useAuth } from '../../context/AuthContext';
 import { useSnackbar } from 'notistack';
 import Link from 'next/link';
@@ -15,12 +15,10 @@ export default function Login() {
 
   const handleLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    try {
-      const res = await api.post('/auth/login', { email, password });
-      login(res.data.token, res.data.user);
+    const res = await apiClient.auth.login({ body: { email, password } });
+    if (res.status === 200) {
+      login(res.body.token, res.body.user);
       enqueueSnackbar('Login successful', { variant: 'success' });
-    } catch {
-      // Handled by interceptor
     }
   };
 
@@ -37,11 +35,9 @@ export default function Login() {
   };
 
   const handleSeed = async () => {
-    try {
-      await api.post('/auth/seed');
+    const res = await apiClient.auth.seed({ body: {} });
+    if (res.status === 200) {
       enqueueSnackbar('Database seeded with demo data', { variant: 'success' });
-    } catch {
-      // Handled by interceptor
     }
   };
 

@@ -2,25 +2,24 @@
 
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
-import api from '../../lib/axios';
+import { apiClient } from '../../lib/api-client';
 import { useSnackbar } from 'notistack';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const handleRegister = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    try {
-      await api.post('/auth/register', { name, email, password });
+    const res = await apiClient.auth.register({ body: { name, email, password } });
+    if (res.status === 201) {
       enqueueSnackbar('Registration successful! Please log in.', { variant: 'success' });
-      // Optionally redirect to login
-      window.location.href = '/login';
-    } catch {
-      // Handled by interceptor
+      router.push('/login');
     }
   };
 

@@ -11,9 +11,10 @@ import {
   Button,
   MenuItem,
 } from '@mui/material';
-import api from '../lib/axios';
+import { apiClient } from '../lib/api-client';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/navigation';
+import { TodoStatus } from '@/entities/Todo';
 
 interface Todo {
   id: string;
@@ -57,30 +58,29 @@ const TodoModal = ({ open, onClose, todo, onSuccess }: TodoModalProps) => {
   }, [todo, open]);
 
   const handleSubmit = async () => {
-    try {
-      const payload = {
-        title,
-        description,
-        status,
-        dueTime: dueTime ? new Date(dueTime) : undefined,
-        duration: duration ? Number(duration) : undefined,
-      };
+    const payload = {
+      title,
+      description,
+      status: status as TodoStatus,
+      dueTime: dueTime ? new Date(dueTime).toISOString() : undefined,
+      duration: duration ? Number(duration) : undefined,
+    };
 
-      if (todo) {
-        await api.put(`/todos/${todo.id}`, payload);
-        enqueueSnackbar('Todo updated', { variant: 'success' });
-      } else {
-        await api.post('/todos', payload);
-        enqueueSnackbar('Todo created', { variant: 'success' });
-      }
+    let res;
+    if (todo) {
+      res = await apiClient.todos.updateTodo({ params: { id: todo.id }, body: payload });
+    } else {
+      res = await apiClient.todos.createTodo({ body: payload });
+    }
+
+    if (res.status === 200 || res.status === 201) {
+      enqueueSnackbar(todo ? 'Todo updated' : 'Todo created', { variant: 'success' });
       onClose();
       if (onSuccess) onSuccess();
       else {
         window.dispatchEvent(new Event('refresh-todos'));
         router.refresh(); // Refresh current page
       }
-    } catch {
-      // Error handled by interceptor
     }
   };
 

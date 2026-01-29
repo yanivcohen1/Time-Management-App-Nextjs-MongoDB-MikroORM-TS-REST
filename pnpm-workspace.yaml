@@ -1,5 +1,10 @@
 onlyBuiltDependencies:
+  - '@scarf/scarf'
+  - '@tree-sitter-grammars/tree-sitter-yaml'
+  - core-js-pure
   - cypress
   - esbuild
   - sharp
+  - tree-sitter
+  - tree-sitter-json
   - unrs-resolver

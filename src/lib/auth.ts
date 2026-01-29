@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiError } from "@/lib/http";
-import { headers } from 'next/headers';
 
 const SECRET = process.env.JWT_ACCESS_SECRET || 'secret';
 const TTL = parseInt(process.env.JWT_ACCESS_TTL_SECONDS || '3600', 10);
@@ -46,6 +45,7 @@ export const isAuthenticated = (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export const getAuthTokenApp = async () => {
+  const { headers } = await import('next/headers');
   const headersList = await headers()
   const authHeader = headersList.get('authorization');
   if (authHeader && authHeader.startsWith('Bearer ')) {

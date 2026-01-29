@@ -43,7 +43,7 @@ import { useThemeContext } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import TodoModal from './TodoModal';
-import api from '../lib/axios';
+import { apiClient } from '../lib/api-client';
 
 const drawerWidth = 240;
 
@@ -66,7 +66,9 @@ export default function Layout({ children }: LayoutProps) {
 
   React.useEffect(() => {
     if (user?.role === 'admin') {
-      api.get('/users').then(res => setUsers(res.data)).catch(console.error);
+      apiClient.users.getUsers().then(res => {
+        if (res.status === 200) setUsers(res.body as unknown as {id: string, name: string}[]);
+      }).catch(console.error);
     }
   }, [user]);
 

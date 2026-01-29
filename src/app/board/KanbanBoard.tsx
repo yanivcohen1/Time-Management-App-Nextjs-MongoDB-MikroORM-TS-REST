@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Box, Card, CardContent, Typography, IconButton, useTheme, useMediaQuery } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import api from '@/lib/axios';
+import { apiClient } from '@/lib/api-client';
 import TodoModal from '@/components/TodoModal';
 import { useAuth } from '@/context/AuthContext';
 
@@ -46,12 +46,12 @@ const KanbanBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchTodos = React.useCallback(async () => {
-    try {
-      const params = selectedUserId ? { userId: selectedUserId, limit: 1000 } : { limit: 1000 };
-      const res = await api.get('/todos', { params });
-      setTodos(res.data.items);
-    } catch (error) {
-      console.error(error);
+    const query = { limit: '1000' } as Record<string, string>;
+    if (selectedUserId) query.userId = selectedUserId;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res = await apiClient.todos.getTodos({ query: query as any });
+    if (res.status === 200) {
+      setTodos(res.body.items as unknown as Todo[]);
     }
   }, [selectedUserId]);
 
@@ -117,12 +117,12 @@ const KanbanBoard = () => {
         });
 
         // API Call
-        try {
-            await api.put(`/todos/${draggableId}`, { status: destination.droppableId });
-            // Refresh to ensure sync? Or just trust optimistic.
-            // fetchTodos(); 
-        } catch {
-            // Revert on error (simplified: just fetch)
+        const res = await apiClient.todos.updateTodo({
+            params: { id: draggableId },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            body: { status: destination.droppableId as any }
+        });
+        if (res.status !== 200) {
             fetchTodos();
         }
     }

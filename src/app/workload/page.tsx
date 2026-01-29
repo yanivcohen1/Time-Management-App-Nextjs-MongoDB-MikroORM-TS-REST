@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/SideMenu';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import api from '../../lib/axios';
+import { apiClient } from '../../lib/api-client';
 import { Box, Typography, Paper, Grid, Chip, Stack } from '@mui/material';
 
 interface Todo {
@@ -42,11 +42,13 @@ export default function WorkloadPage() {
   useEffect(() => {
     if (user) {
       const fetch = async () => {
-        try {
-          const params = selectedUserId ? { userId: selectedUserId, limit: 1000 } : { limit: 1000 };
-          const res = await api.get('/todos', { params });
-          setTodos(res.data.items);
-        } catch {}
+        const query = { limit: '1000' } as Record<string, string>;
+        if (selectedUserId) query.userId = selectedUserId;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const res = await apiClient.todos.getTodos({ query: query as any });
+        if (res.status === 200) {
+          setTodos(res.body.items as unknown as Todo[]);
+        }
       };
       fetch();
     }
@@ -55,11 +57,13 @@ export default function WorkloadPage() {
   useEffect(() => {
     const handler = () => {
       const fetch = async () => {
-        try {
-          const params = selectedUserId ? { userId: selectedUserId, limit: 1000 } : { limit: 1000 };
-          const res = await api.get('/todos', { params });
-          setTodos(res.data.items);
-        } catch {}
+        const query = { limit: '1000' } as Record<string, string>;
+        if (selectedUserId) query.userId = selectedUserId;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const res = await apiClient.todos.getTodos({ query: query as any });
+        if (res.status === 200) {
+          setTodos(res.body.items as unknown as Todo[]);
+        }
       };
       fetch();
     };

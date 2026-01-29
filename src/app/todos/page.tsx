@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/SideMenu';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import api from '../../lib/axios';
+import { apiClient } from '../../lib/api-client';
 import {
   Typography,
   Paper,
@@ -80,34 +80,23 @@ export default function TodosPage() {
   const sortedTodos = todos;
 
   const fetchTodos = React.useCallback(async () => {
-    try {
-      const params: Record<string, string> = {};
-      if (selectedUserId) {
-        params.userId = selectedUserId;
-      }
-      if (filterStatus && filterStatus !== 'ALL') {
-        params.status = filterStatus;
-      }
-      if (filterTitle) {
-        params.title = filterTitle;
-      }
-      if (filterStartDate) {
-        params.startDate = filterStartDate;
-      }
-      if (filterEndDate) {
-        params.endDate = filterEndDate;
-      }
-      params.page = page.toString();
-      params.limit = rowsPerPage.toString();
-      params.orderBy = orderBy;
-      params.order = order;
-      params._t = Date.now().toString(); // Avoid caching
+    const query = {
+      page: page.toString(),
+      limit: rowsPerPage.toString(),
+      orderBy,
+      order,
+    } as Record<string, string>;
+    if (selectedUserId) query.userId = selectedUserId;
+    if (filterStatus && filterStatus !== 'ALL') query.status = filterStatus;
+    if (filterTitle) query.title = filterTitle;
+    if (filterStartDate) query.startDate = filterStartDate;
+    if (filterEndDate) query.endDate = filterEndDate;
 
-      const res = await api.get('/todos', { params });
-      setTodos(res.data.items);
-      setTotal(res.data.total);
-    } catch (error) {
-      console.error(error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res = await apiClient.todos.getTodos({ query: query as any });
+    if (res.status === 200) {
+      setTodos(res.body.items as unknown as Todo[]);
+      setTotal(res.body.total);
     }
   }, [selectedUserId, filterStatus, filterTitle, filterStartDate, filterEndDate, page, rowsPerPage, orderBy, order]);
 
@@ -145,12 +134,10 @@ export default function TodosPage() {
 
   const confirmDelete = async () => {
     if (deleteId) {
-      try {
-        await api.delete(`/todos/${deleteId}`);
+      const res = await apiClient.todos.deleteTodo({ params: { id: deleteId }, body: {} });
+      if (res.status === 200) {
         enqueueSnackbar('Todo deleted', { variant: 'success' });
         fetchTodos();
-      } catch {
-        // Handled by interceptor
       }
     }
     handleCloseDeletePopover();
