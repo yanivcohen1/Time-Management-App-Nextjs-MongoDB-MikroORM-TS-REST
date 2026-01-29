@@ -10,15 +10,25 @@ export const LoginResponseSchema = z.object({
   user: UserSchema.omit({ createdAt: true, updatedAt: true }),
 });
 
+export const LoginBodySchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export const RegisterBodySchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export const SeedBodySchema = z.object({});
+
 // --- Login ---
 const login = {
   contract: {
     method: 'POST',
     path: '/auth/login',
-    body: z.object({
-      email: z.string().email(),
-      password: z.string(),
-    }),
+    body: LoginBodySchema,
     responses: {
       200: LoginResponseSchema,
       401: ErrorSchema,
@@ -27,7 +37,7 @@ const login = {
     },
     summary: 'Login to the application',
   } as const,
-  handler: typeof window === 'undefined' ? (async ({ body }: any) => {
+  handler: typeof window === 'undefined' ? (async ({ body }: { body: z.infer<typeof LoginBodySchema> }) => {
     try {
       const { getORM } = await import('@/lib/db');
       const { User } = await import('@/entities/User');
@@ -74,11 +84,7 @@ const register = {
   contract: {
     method: 'POST',
     path: '/auth/register',
-    body: z.object({
-      name: z.string(),
-      email: z.string().email(),
-      password: z.string(),
-    }),
+    body: RegisterBodySchema,
     responses: {
       201: z.object({ message: z.string() }),
       400: ErrorSchema,
@@ -86,7 +92,7 @@ const register = {
     },
     summary: 'Register a new user',
   } as const,
-  handler: typeof window === 'undefined' ? (async ({ body }: any) => {
+  handler: typeof window === 'undefined' ? (async ({ body }: { body: z.infer<typeof RegisterBodySchema> }) => {
     try {
       const { getORM } = await import('@/lib/db');
       const { User } = await import('@/entities/User');
@@ -118,7 +124,7 @@ const seed = {
   contract: {
     method: 'POST',
     path: '/auth/seed',
-    body: z.object({}),
+    body: SeedBodySchema,
     responses: {
       200: z.object({ message: z.string() }),
       500: ErrorSchema,

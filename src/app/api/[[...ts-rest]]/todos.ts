@@ -24,22 +24,44 @@ export const PaginatedTodosSchema = z.object({
   total: z.number(),
 });
 
+export const GetTodosQuerySchema = z.object({
+  userId: z.string().optional(),
+  status: z.string().optional(),
+  title: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  page: z.string().optional().transform(v => v ? parseInt(v, 10) : 0),
+  limit: z.string().optional().transform(v => v ? parseInt(v, 10) : 10),
+  orderBy: z.string().optional(),
+  order: z.enum(['asc', 'desc']).optional(),
+});
+
+export const CreateTodoBodySchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  status: TodoStatusSchema.optional(),
+  dueTime: z.string().optional(),
+  duration: z.number().optional(),
+});
+
+export const UpdateTodoBodySchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  status: TodoStatusSchema.optional(),
+  dueTime: z.string().optional().nullable(),
+  duration: z.number().optional().nullable(),
+});
+
+export const TodoIdParamsSchema = z.object({
+  id: z.string(),
+});
+
 // --- Get Todos ---
 const getTodos = {
   contract: {
     method: 'GET',
     path: '/todos',
-    query: z.object({
-      userId: z.string().optional(),
-      status: z.string().optional(),
-      title: z.string().optional(),
-      startDate: z.string().optional(),
-      endDate: z.string().optional(),
-      page: z.string().optional().transform(v => v ? parseInt(v, 10) : 0),
-      limit: z.string().optional().transform(v => v ? parseInt(v, 10) : 10),
-      orderBy: z.string().optional(),
-      order: z.enum(['asc', 'desc']).optional(),
-    }),
+    query: GetTodosQuerySchema,
     responses: {
       200: PaginatedTodosSchema,
       401: ErrorSchema,
@@ -47,7 +69,7 @@ const getTodos = {
     },
     summary: 'Get all todos with filtering and pagination',
   } as const,
-  handler: typeof window === 'undefined' ? (async ({ query }: any) => {
+  handler: typeof window === 'undefined' ? (async ({ query }: { query: z.infer<typeof GetTodosQuerySchema> }) => {
     try {
       const { isAuthenticatedApp } = await import('@/lib/auth');
       const { getORM } = await import('@/lib/db');
@@ -118,13 +140,7 @@ const createTodo = {
   contract: {
     method: 'POST',
     path: '/todos',
-    body: z.object({
-      title: z.string(),
-      description: z.string().optional(),
-      status: TodoStatusSchema.optional(),
-      dueTime: z.string().optional(),
-      duration: z.number().optional(),
-    }),
+    body: CreateTodoBodySchema,
     responses: {
       201: TodoSchema,
       401: ErrorSchema,
@@ -132,7 +148,7 @@ const createTodo = {
     },
     summary: 'Create a new todo',
   } as const,
-  handler: typeof window === 'undefined' ? (async ({ body }: any) => {
+  handler: typeof window === 'undefined' ? (async ({ body }: { body: z.infer<typeof CreateTodoBodySchema> }) => {
     try {
       const { isAuthenticatedApp } = await import('@/lib/auth');
       const { getORM } = await import('@/lib/db');
@@ -164,9 +180,7 @@ const getTodo = {
   contract: {
     method: 'GET',
     path: '/todos/:id',
-    pathParams: z.object({
-      id: z.string(),
-    }),
+    pathParams: TodoIdParamsSchema,
     responses: {
       200: TodoSchema,
       404: ErrorSchema,
@@ -174,7 +188,7 @@ const getTodo = {
     },
     summary: 'Get a single todo by ID',
   } as const,
-  handler: typeof window === 'undefined' ? (async ({ params }: any) => {
+  handler: typeof window === 'undefined' ? (async ({ params }: { params: z.infer<typeof TodoIdParamsSchema> }) => {
     try {
       const { isAuthenticatedApp } = await import('@/lib/auth');
       const { getORM } = await import('@/lib/db');
@@ -205,16 +219,8 @@ const updateTodo = {
   contract: {
     method: 'PATCH',
     path: '/todos/:id',
-    pathParams: z.object({
-      id: z.string(),
-    }),
-    body: z.object({
-      title: z.string().optional(),
-      description: z.string().optional(),
-      status: TodoStatusSchema.optional(),
-      dueTime: z.string().optional().nullable(),
-      duration: z.number().optional().nullable(),
-    }),
+    pathParams: TodoIdParamsSchema,
+    body: UpdateTodoBodySchema,
     responses: {
       200: TodoSchema,
       404: ErrorSchema,
@@ -223,7 +229,7 @@ const updateTodo = {
     },
     summary: 'Update a todo by ID',
   } as const,
-  handler: typeof window === 'undefined' ? (async ({ params, body }: any) => {
+  handler: typeof window === 'undefined' ? (async ({ params, body }: { params: z.infer<typeof TodoIdParamsSchema>, body: z.infer<typeof UpdateTodoBodySchema> }) => {
     try {
       const { isAuthenticatedApp } = await import('@/lib/auth');
       const { getORM } = await import('@/lib/db');
@@ -264,9 +270,7 @@ const deleteTodo = {
   contract: {
     method: 'DELETE',
     path: '/todos/:id',
-    pathParams: z.object({
-      id: z.string(),
-    }),
+    pathParams: TodoIdParamsSchema,
     body: z.object({}),
     responses: {
       200: z.object({ message: z.string() }),
@@ -275,7 +279,7 @@ const deleteTodo = {
     },
     summary: 'Delete a todo by ID',
   } as const,
-  handler: typeof window === 'undefined' ? (async ({ params }: any) => {
+  handler: typeof window === 'undefined' ? (async ({ params }: { params: z.infer<typeof TodoIdParamsSchema> }) => {
     try {
       const { isAuthenticatedApp } = await import('@/lib/auth');
       const { getORM } = await import('@/lib/db');
