@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 import { apiClient } from '../../lib/api-client';
-import { LoginResponseSchema } from '../api/[[...ts-rest]]/auth';
-import { z } from 'zod';
 import { useAuth } from '../../context/AuthContext';
 import { useSnackbar } from 'notistack';
 import Link from 'next/link';
@@ -19,8 +17,7 @@ export default function Login() {
     if (e) e.preventDefault();
     const res = await apiClient.auth.login({ body: { email, password } });
     if (res.status === 200) {
-      const validated = LoginResponseSchema.parse(res.body);
-      login(validated.token, validated.user);
+      login(res.body.token, res.body.user);
       enqueueSnackbar('Login successful', { variant: 'success' });
     }
   };
@@ -40,7 +37,6 @@ export default function Login() {
   const handleSeed = async () => {
     const res = await apiClient.auth.seed({ body: {} });
     if (res.status === 200) {
-      z.object({ message: z.string() }).parse(res.body);
       enqueueSnackbar('Database seeded with demo data', { variant: 'success' });
     }
   };

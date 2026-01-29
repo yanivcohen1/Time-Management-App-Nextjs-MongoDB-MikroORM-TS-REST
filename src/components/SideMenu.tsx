@@ -44,8 +44,6 @@ import { useAuth } from '../context/AuthContext';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import TodoModal from './TodoModal';
 import { apiClient } from '../lib/api-client';
-import { UserSchema } from '../app/api/[[...ts-rest]]/users';
-import { z } from 'zod';
 
 const drawerWidth = 240;
 
@@ -69,10 +67,7 @@ export default function Layout({ children }: LayoutProps) {
   React.useEffect(() => {
     if (user?.role === 'admin') {
       apiClient.users.getUsers().then(res => {
-        if (res.status === 200) {
-          const validated = z.array(UserSchema).parse(res.body);
-          setUsers(validated.map(u => ({ id: u.id, name: u.name })));
-        }
+        if (res.status === 200) setUsers(res.body as unknown as {id: string, name: string}[]);
       }).catch(console.error);
     }
   }, [user]);

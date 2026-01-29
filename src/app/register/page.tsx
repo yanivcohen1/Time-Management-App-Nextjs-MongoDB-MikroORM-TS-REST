@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography, Paper } from '@mui/material';
 import { apiClient } from '../../lib/api-client';
-import { UserSchema } from '../api/[[...ts-rest]]/users';
 import { useSnackbar } from 'notistack';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -19,7 +18,6 @@ export default function Register() {
     if (e) e.preventDefault();
     const res = await apiClient.auth.register({ body: { name, email, password } });
     if (res.status === 201) {
-      UserSchema.parse(res.body);
       enqueueSnackbar('Registration successful! Please log in.', { variant: 'success' });
       router.push('/login');
     }

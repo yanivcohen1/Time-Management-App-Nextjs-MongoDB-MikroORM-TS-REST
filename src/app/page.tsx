@@ -5,7 +5,6 @@ import Layout from '../components/SideMenu';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '../lib/api-client';
-import { PaginatedTodosSchema } from './api/[[...ts-rest]]/todos';
 import { Box, Typography, Paper, Grid, Chip, Stack } from '@mui/material';
 
 interface Todo {
@@ -48,8 +47,7 @@ export default function Workload() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res = await apiClient.todos.getTodos({ query: query as any });
         if (res.status === 200) {
-          const validated = PaginatedTodosSchema.parse(res.body);
-          setTodos(validated.items as unknown as Todo[]);
+          setTodos(res.body.items as unknown as Todo[]);
         }
       };
       fetch();
@@ -64,8 +62,7 @@ export default function Workload() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res = await apiClient.todos.getTodos({ query: query as any });
         if (res.status === 200) {
-          const validated = PaginatedTodosSchema.parse(res.body);
-          setTodos(validated.items as unknown as Todo[]);
+          setTodos(res.body.items as unknown as Todo[]);
         }
       };
       fetch();
